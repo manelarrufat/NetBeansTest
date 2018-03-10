@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Contains forcontu_entities.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function forcontu_entities_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the forcontu_entities module.
+    case 'help.page.forcontu_entities':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Forcontu Entities Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for node entities.
+ */
+function forcontu_entities_node_load($nodes) {
+  
+  foreach ($nodes as $node) {
+    
+    if ($node->bundle() == 'article') {
+      $title = $node->get('title')->getValue();
+      // Mostramos sufijo "Article: "
+      $node->set('title', t('Article: ') . $title[0]['value']);
+      
+    }
+  }
+}
+
+/**
+* Implements ENTITY_TYPE_insert() for user.
+*/
+function forcontu_entities_user_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  
+  $fipsum = \Drupal::service('plugin.manager.fipsum')->createInstance('lorem_ipsum');
+  
+  $node = $node_storage->create([
+    'uid' => $entity->id(),
+    'type' => 'page',
+    'title' => 'Presentación de ' . $entity->getUsername(),
+    'body' => $fipsum->generate(600)
+  ]);
+  $node->save();
+  
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user.
+ */
+function forcontu_entities_user_predelete(Drupal\user\Entity\User $user) {
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nodes_user = $node_storage->loadByProperties(['uid' => $user->id()]);
+  $node_storage->delete($nodes_user);
+  drupal_set_message('Eliminado el contenido del usuario ' . $user->getUsername());
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK()
+ */
+function forcontu_entities_preprocess_page_title(&$variables) {
+  dpm($variables);
+  // obtener ruta actual
+  $uri = \Drupal::request()->getRequestUri();
+  dpm($uri);
+  
+  // obtener secciones
+  $sections = \Drupal::entityQuery('forcontu_entities_section')->execute();
+  dpm($sections);
+}
