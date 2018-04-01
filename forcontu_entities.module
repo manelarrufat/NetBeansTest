@@ -71,12 +71,28 @@ function forcontu_entities_user_predelete(Drupal\user\Entity\User $user) {
  * Implements MODULE_preprocess_HOOK()
  */
 function forcontu_entities_preprocess_page_title(&$variables) {
-  dpm($variables);
   // obtener ruta actual
   $uri = \Drupal::request()->getRequestUri();
-  dpm($uri);
+  //dpm($uri);
   
   // obtener secciones
   $sections = \Drupal::entityQuery('forcontu_entities_section')->execute();
-  dpm($sections);
+  //dpm($sections);
+  
+  // Obtener storage de las secciones
+  $section_storage = \Drupal::entityTypeManager()->getStorage('forcontu_entities_section');
+  //dpm($section_storage);
+  
+  // Si hay secciones -> crear variables
+  if (count($sections) > 0 ) {
+    foreach ($sections as $section) {
+      $st = $section_storage->load($section);
+      // Crear el patrón de búsqueda
+      $pattern = '/\/' . $section . '\/+/'; 
+      if (preg_match($pattern, $uri)) {
+        $variables['section_id'] = $st->id();
+        $variables['section_color'] = $st->getColor();
+      }
+    }
+  }
 }
