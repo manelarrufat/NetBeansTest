@@ -246,6 +246,31 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['user_to'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('To'))
+      ->setDescription(t('The user ID of the Message recipient.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'To',
+        'type' => 'author',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+    
     $fields['subject'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Subject'))
       ->setDescription(t('The subject of the Message entity.'))
@@ -267,11 +292,11 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
     
-    $fields['content'] = BaseFieldDefinition::create('string')
+    $fields['content'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Content'))
       ->setDescription(t('The content of the message'))
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('form', [
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'text_default',
         'weight' => 0,
