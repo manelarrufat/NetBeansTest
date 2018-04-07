@@ -11,6 +11,9 @@ delete message entities:
 
 edit message entities:
   title: 'Edit Message entities'
+  
+access message overview:
+  title: 'Access the Message overview page'
 
 view published message entities:
   title: 'View published Message entities'
