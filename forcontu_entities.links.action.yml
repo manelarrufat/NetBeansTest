@@ -4,3 +4,14 @@ entity.forcontu_entities_section.add_form:
   appears_on:
     - entity.forcontu_entities_section.collection
 
+entity.forcontu_entities_message.add_form:
+  route_name: entity.forcontu_entities_message.add_page
+  title: 'Add Message'
+  appears_on:
+    - entity.forcontu_entities_message.collection
+entity.forcontu_entities_message_type.add_form:
+  route_name: entity.forcontu_entities_message_type.add_form
+  title: 'Add Message type'
+  appears_on:
+    - entity.forcontu_entities_message_type.collection
+

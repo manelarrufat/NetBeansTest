@@ -7,3 +7,21 @@ entity.forcontu_entities_section.collection:
   parent: system.admin_structure
   weight: 99
 
+
+# Message menu items definition
+entity.forcontu_entities_message.collection:
+  title: 'Message list'
+  route_name: entity.forcontu_entities_message.collection
+  description: 'List Message entities'
+  parent: system.admin_structure
+  weight: 100
+
+
+# Message type menu items definition
+entity.forcontu_entities_message_type.collection:
+  title: 'Message type'
+  route_name: entity.forcontu_entities_message_type.collection
+  description: 'List Message type (bundles)'
+  parent: system.admin_structure
+  weight: 99
+

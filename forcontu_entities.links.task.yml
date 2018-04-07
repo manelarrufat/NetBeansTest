@@ -1,0 +1,18 @@
+# Message routing definition
+
+entity.forcontu_entities_message.canonical:
+  route_name: entity.forcontu_entities_message.canonical
+  base_route: entity.forcontu_entities_message.canonical
+  title: 'View'
+
+entity.forcontu_entities_message.edit_form:
+  route_name: entity.forcontu_entities_message.edit_form
+  base_route: entity.forcontu_entities_message.canonical
+  title: 'Edit'
+
+entity.forcontu_entities_message.delete_form:
+  route_name:  entity.forcontu_entities_message.delete_form
+  base_route:  entity.forcontu_entities_message.canonical
+  title: Delete
+  weight: 10
+
