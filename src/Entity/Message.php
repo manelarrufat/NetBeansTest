@@ -39,7 +39,7 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "type",
- *     "label" = "name",
+ *     "label" = "subject",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
@@ -74,15 +74,22 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
-    return $this->get('name')->value;
+  public function getType() {
+    return $this->bundle();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setName($name) {
-    $this->set('name', $name);
+  public function getSubject() {
+    return $this->get('subject')->value;
+  }
+  
+ /**
+   * {@inheritdoc}
+   */
+  public function setSubject($subject) {
+    $this->set('subject', $subject);
     return $this;
   }
 
@@ -149,6 +156,68 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
+  public function getUserToId() {
+    return $this->get('user_to')->target_id;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setUserToId($uid) {
+    $this->set('user_to', $uid);
+    return $this;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getUserTo() {
+    return $this->get('user_to')->entity;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setUserTo(UserInterface $account) {
+    $this->set('user_to', $account->id());
+    return $this;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getContent() {
+    return $this->get('content')->value;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setContent($content) {
+    $this->set('content', $content);
+    return $this;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function isRead() {
+    return (bool) $this->getEntityKey('is_read');
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setRead($read) {
+    $this->set('is_read', $read ? TRUE : FALSE);
+    return $this;
+  }
+
+  
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
@@ -177,11 +246,11 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Message entity.'))
+    $fields['subject'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Subject'))
+      ->setDescription(t('The subject of the Message entity.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 100,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -197,15 +266,32 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
-
+    
+    $fields['content'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Content'))
+      ->setDescription(t('The content of the message'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+    
+    $fields['is_read'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Read'))
+      ->setDescription(t('A boolean indicating whether the Message is read.'))
+      ->setDefaultValue(FALSE);
+     
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Message is published.'))
-      ->setDefaultValue(TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'weight' => -3,
-      ]);
+      ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
