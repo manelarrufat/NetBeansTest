@@ -72,6 +72,7 @@ EntityTypeInterface $entity_type) {
         )
       )
     );
+    $row['created'] = $this->dateFormatter->format($entity->getCreatedTime(), 'short');
         
     return $row + parent::buildRow($entity);
   }

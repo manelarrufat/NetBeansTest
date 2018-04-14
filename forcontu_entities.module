@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -129,4 +131,16 @@ function forcontu_entities_theme_suggestions_forcontu_entities_message(array $va
   $suggestions[] = 'forcontu_entities_message__' . $entity->id();
   $suggestions[] = 'forcontu_entities_message__' . $entity->id() . '__' . $sanitized_view_mode;
   return $suggestions;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for node entities.
+ */
+function forcontu_entities_forcontu_entities_message_view(array &$build, EntityInterface $entity, 
+EntityViewDisplayInterface $display, $view_mode) {
+  // Si el mensaje es leído por el usuario va dirigido a él, marcamos como leído
+  if(\Drupal::currentUser()->id() == $entity->getUserToId()) {
+    $entity->setRead(1);
+    $entity->save();
+  }
 }
