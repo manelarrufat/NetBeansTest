@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldFormatter(
  *   id = "forcontu_entities_simple_text",
+ *   module = "forcontu_entities",
  *   label = @Translation("Simple text-based formatter"),
  *   field_types = {
  *     "forcontu_entities_color"
@@ -24,41 +25,24 @@ class SimpleTextFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
-    return [
-      // Implement default settings.
-    ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return [
-      // Implement settings form.
-    ] + parent::settingsForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = [];
-    // Implement settings summary.
-
-    return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = [];
+    $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#markup' => $this->viewValue($item)];
+    $elements[$delta] = array(
+      // We create a render array to produce the desired markup,
+      // "<p style="color: #hexcolor">The color code ...
+      // #hexcolor</p>".
+      // See theme_html_tag().
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#attributes' => array(
+        'style' => 'color: ' . $item->value,
+      ),
+      '#value' => $this->t('The color code in this field is@code', 
+                            array('@code' => $item->value)),
+      );
     }
-
     return $elements;
   }
 
@@ -71,10 +55,10 @@ class SimpleTextFormatter extends FormatterBase {
    * @return string
    *   The textual output generated.
    */
-  protected function viewValue(FieldItemInterface $item) {
-    // The text value has no text format assigned to it, so the user input
-    // should equal the output, including newlines.
-    return nl2br(Html::escape($item->value));
-  }
+//  protected function viewValue(FieldItemInterface $item) {
+//    // The text value has no text format assigned to it, so the user input
+//    // should equal the output, including newlines.
+//    return nl2br(Html::escape($item->value));
+//  }
 
 }
