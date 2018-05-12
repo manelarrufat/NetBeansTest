@@ -2,12 +2,8 @@
 
 namespace Drupal\forcontu_entities\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Random;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -19,21 +15,11 @@ use Drupal\Core\TypedData\DataDefinition;
  *   module = "forcontu_entities",
  *   description = @Translation("Field to store an RGB color"),
  *   default_widget = "forcontu_entities_text",
- *   default_formatter = "forcontu_entities_simple_text"
+ *   default_formatter = "forcontu_entities_simple_text",
+ *   constraints = { "White" = {} }
  * )
  */
 class ColorItem extends FieldItemBase {
-
-  /**
-   * {@inheritdoc}
-   */
-//  public static function defaultStorageSettings() {
-//    return [
-//      'max_length' => 255,
-//      'is_ascii' => FALSE,
-//      'case_sensitive' => FALSE,
-//    ] + parent::defaultStorageSettings();
-//  }
 
   /**
    * {@inheritdoc}
@@ -63,57 +49,7 @@ class ColorItem extends FieldItemBase {
     return $schema;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-//  public function getConstraints() {
-//    $constraints = parent::getConstraints();
-//
-//    if ($max_length = $this->getSetting('max_length')) {
-//      $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
-//      $constraints[] = $constraint_manager->create('ComplexData', [
-//        'value' => [
-//          'Length' => [
-//            'max' => $max_length,
-//            'maxMessage' => t('%name: may not be longer than @max characters.', [
-//              '%name' => $this->getFieldDefinition()->getLabel(),
-//              '@max' => $max_length
-//            ]),
-//          ],
-//        ],
-//      ]);
-//    }
-//
-//    return $constraints;
-//  }
-
-  /**
-   * {@inheritdoc}
-   */
-//  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-//    $random = new Random();
-//    $values['value'] = $random->word(mt_rand(1, $field_definition->getSetting('max_length')));
-//    return $values;
-//  }
-
-  /**
-   * {@inheritdoc}
-   */
-//  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-//    $elements = [];
-//
-//    $elements['max_length'] = [
-//      '#type' => 'number',
-//      '#title' => t('Maximum length'),
-//      '#default_value' => $this->getSetting('max_length'),
-//      '#required' => TRUE,
-//      '#description' => t('The maximum length of the field in characters.'),
-//      '#min' => 1,
-//      '#disabled' => $has_data,
-//    ];
-//
-//    return $elements;
-//  }
+  
 
   /**
    * {@inheritdoc}
